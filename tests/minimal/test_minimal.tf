@@ -14,33 +14,21 @@ terraform {
 module "main" {
   source = "../.."
 
-  name = "ABC"
+  name = "EXT-POL1"
 }
 
-data "aci_rest" "fvTenant" {
-  dn = "uni/tn-ABC"
+data "aci_rest" "fvFabricExtConnP" {
+  dn = "uni/tn-infra/fabricExtConnP-1"
 
   depends_on = [module.main]
 }
 
-resource "test_assertions" "fvTenant" {
-  component = "fvTenant"
+resource "test_assertions" "fvFabricExtConnP" {
+  component = "fvFabricExtConnP"
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.fvTenant.content.name
-    want        = "ABC"
-  }
-
-  equal "nameAlias" {
-    description = "nameAlias"
-    got         = data.aci_rest.fvTenant.content.nameAlias
-    want        = ""
-  }
-
-  equal "descr" {
-    description = "descr"
-    got         = data.aci_rest.fvTenant.content.descr
-    want        = ""
+    got         = data.aci_rest.fvFabricExtConnP.content.name
+    want        = module.main.name
   }
 }

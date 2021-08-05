@@ -1,5 +1,5 @@
 variable "name" {
-  description = "Tenant name."
+  description = "External connectivity policy name."
   type        = string
 
   validation {
@@ -8,24 +8,76 @@ variable "name" {
   }
 }
 
-variable "alias" {
-  description = "Tenant alias."
+variable "route_target" {
+  description = "Route target."
   type        = string
-  default     = ""
+  default     = "extended:as2-nn4:5:16"
+}
+
+variable "fabric_id" {
+  description = "Fabric ID. Minimum value: 1. Maximum value: 65535."
+  type        = number
+  default     = 1
 
   validation {
-    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.alias))
-    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+    condition     = var.fabric_id >= 1 && var.fabric_id <= 65535
+    error_message = "Minimum value: 1. Maximum value: 65535."
   }
 }
 
-variable "description" {
-  description = "Tenant description."
-  type        = string
-  default     = ""
+variable "site_id" {
+  description = "Site ID. Minimum value: 0. Maximum value: 1000."
+  type        = number
+  default     = 0
 
   validation {
-    condition     = can(regex("^[a-zA-Z0-9\\!#$%()*,-./:;@ _{|}~?&+]{0,128}$", var.description))
-    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `\\`, `!`, `#`, `$`, `%`, `(`, `)`, `*`, `,`, `-`, `.`, `/`, `:`, `;`, `@`, ` `, `_`, `{`, `|`, }`, `~`, `?`, `&`, `+`. Maximum characters: 128."
+    condition     = var.site_id >= 0 && var.site_id <= 1000
+    error_message = "Minimum value: 0. Maximum value: 1000."
+  }
+}
+
+variable "bgp_password" {
+  description = "BGP password."
+  type        = string
+  default     = ""
+}
+
+variable "routing_profiles" {
+  description = "External routing profiles."
+  type = list(object({
+    name        = string
+    description = optional(string)
+    subnets     = optional(list(string))
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for rp in var.routing_profiles : can(regex("^[a-zA-Z0-9_.-]{0,64}$", rp.name))
+    ])
+    error_message = "`name`: Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+
+  validation {
+    condition = alltrue([
+      for rp in var.routing_profiles : can(regex("^[a-zA-Z0-9\\!#$%()*,-./:;@ _{|}~?&+]{0,128}$", rp.description))
+    ])
+    error_message = "`description`: Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `\\`, `!`, `#`, `$`, `%`, `(`, `)`, `*`, `,`, `-`, `.`, `/`, `:`, `;`, `@`, ` `, `_`, `{`, `|`, }`, `~`, `?`, `&`, `+`. Maximum characters: 128."
+  }
+}
+
+variable "data_plane_teps" {
+  description = "Data plane TEPs. Allowed values `pod`: 1-255."
+  type = list(object({
+    pod = number
+    ip  = string
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for tep in var.data_plane_teps : tep.pod >= 1 && tep.pod <= 255
+    ])
+    error_message = "`pod`: Minimum value: 1. Maximum value: 255."
   }
 }
