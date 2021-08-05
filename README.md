@@ -3,7 +3,7 @@
 
 # Terraform ACI External Connectivity Policy Module
 
-Description
+Manages ACI External Connectivity Policy
 
 Location in GUI:
 `Tenants` » `infra` » `Policies` » `Protocol` » `Fabric Ext Connection Policies`
