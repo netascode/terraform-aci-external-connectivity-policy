@@ -55,17 +55,17 @@ resource "aci_rest" "l3extSubnet" {
 }
 
 resource "aci_rest" "fvPodConnP" {
-  for_each   = { for tep in var.data_plane_teps : tep.pod => tep }
-  dn         = "${aci_rest.fvFabricExtConnP.id}/podConnP-${each.value.pod}"
+  for_each   = { for tep in var.data_plane_teps : tep.pod_id => tep }
+  dn         = "${aci_rest.fvFabricExtConnP.id}/podConnP-${each.value.pod_id}"
   class_name = "fvPodConnP"
   content = {
-    id = each.value.pod
+    id = each.value.pod_id
   }
 }
 
 resource "aci_rest" "fvIp" {
-  for_each   = { for tep in var.data_plane_teps : tep.pod => tep }
-  dn         = "${aci_rest.fvPodConnP[each.value.pod].id}/ip-[${each.value.ip}]"
+  for_each   = { for tep in var.data_plane_teps : tep.pod_id => tep }
+  dn         = "${aci_rest.fvPodConnP[each.value.pod_id].id}/ip-[${each.value.ip}]"
   class_name = "fvIp"
   content = {
     addr = each.value.ip

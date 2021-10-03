@@ -13,7 +13,8 @@ Note that this example will create resources. Resources can be destroyed with `t
 
 ```hcl
 module "aci_external_connectivity_policy" {
-  source = "netascode/external-connectivity-policy/aci"
+  source  = "netascode/external-connectivity-policy/aci"
+  version = ">= 0.0.1"
 
   name         = "EXT-POL1"
   route_target = "extended:as2-nn4:5:17"
@@ -26,8 +27,8 @@ module "aci_external_connectivity_policy" {
     subnets     = ["10.0.0.0/24"]
   }]
   data_plane_teps = [{
-    pod = 2
-    ip  = "11.1.1.11"
+    pod_id = 2
+    ip     = "11.1.1.11"
   }]
 }
 

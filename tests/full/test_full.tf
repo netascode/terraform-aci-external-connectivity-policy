@@ -25,8 +25,8 @@ module "main" {
     subnets     = ["10.0.0.0/24"]
   }]
   data_plane_teps = [{
-    pod = 5
-    ip  = "11.1.1.11"
+    pod_id = 5
+    ip     = "11.1.1.11"
   }]
 }
 

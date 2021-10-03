@@ -67,17 +67,17 @@ variable "routing_profiles" {
 }
 
 variable "data_plane_teps" {
-  description = "Data plane TEPs. Allowed values `pod`: 1-255."
+  description = "Data plane TEPs. Allowed values `pod_id`: 1-255."
   type = list(object({
-    pod = number
-    ip  = string
+    pod_id = number
+    ip     = string
   }))
   default = []
 
   validation {
     condition = alltrue([
-      for tep in var.data_plane_teps : tep.pod >= 1 && tep.pod <= 255
+      for tep in var.data_plane_teps : tep.pod_id >= 1 && tep.pod_id <= 255
     ])
-    error_message = "`pod`: Minimum value: 1. Maximum value: 255."
+    error_message = "`pod_id`: Minimum value: 1. Maximum value: 255."
   }
 }
