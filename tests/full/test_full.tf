@@ -5,8 +5,8 @@ terraform {
     }
 
     aci = {
-      source  = "netascode/aci"
-      version = ">=0.2.0"
+      source  = "CiscoDevNet/aci"
+      version = ">=2.0.0"
     }
   }
 }
@@ -30,7 +30,7 @@ module "main" {
   }]
 }
 
-data "aci_rest" "fvFabricExtConnP" {
+data "aci_rest_managed" "fvFabricExtConnP" {
   dn = "uni/tn-infra/fabricExtConnP-1"
 
   depends_on = [module.main]
@@ -41,31 +41,31 @@ resource "test_assertions" "fvFabricExtConnP" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.fvFabricExtConnP.content.name
+    got         = data.aci_rest_managed.fvFabricExtConnP.content.name
     want        = module.main.name
   }
 
   equal "id" {
     description = "id"
-    got         = data.aci_rest.fvFabricExtConnP.content.id
+    got         = data.aci_rest_managed.fvFabricExtConnP.content.id
     want        = "1"
   }
 
   equal "rt" {
     description = "rt"
-    got         = data.aci_rest.fvFabricExtConnP.content.rt
+    got         = data.aci_rest_managed.fvFabricExtConnP.content.rt
     want        = "extended:as2-nn4:5:17"
   }
 
   equal "siteId" {
     description = "siteId"
-    got         = data.aci_rest.fvFabricExtConnP.content.siteId
+    got         = data.aci_rest_managed.fvFabricExtConnP.content.siteId
     want        = "2"
   }
 }
 
-data "aci_rest" "fvPeeringP" {
-  dn = "${data.aci_rest.fvFabricExtConnP.id}/peeringP"
+data "aci_rest_managed" "fvPeeringP" {
+  dn = "${data.aci_rest_managed.fvFabricExtConnP.id}/peeringP"
 
   depends_on = [module.main]
 }
@@ -75,13 +75,13 @@ resource "test_assertions" "fvPeeringP" {
 
   equal "type" {
     description = "type"
-    got         = data.aci_rest.fvPeeringP.content.type
+    got         = data.aci_rest_managed.fvPeeringP.content.type
     want        = "automatic_with_full_mesh"
   }
 }
 
-data "aci_rest" "l3extFabricExtRoutingP" {
-  dn = "${data.aci_rest.fvFabricExtConnP.id}/fabricExtRoutingP-PROF1"
+data "aci_rest_managed" "l3extFabricExtRoutingP" {
+  dn = "${data.aci_rest_managed.fvFabricExtConnP.id}/fabricExtRoutingP-PROF1"
 
   depends_on = [module.main]
 }
@@ -91,19 +91,19 @@ resource "test_assertions" "l3extFabricExtRoutingP" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.l3extFabricExtRoutingP.content.name
+    got         = data.aci_rest_managed.l3extFabricExtRoutingP.content.name
     want        = "PROF1"
   }
 
   equal "descr" {
     description = "descr"
-    got         = data.aci_rest.l3extFabricExtRoutingP.content.descr
+    got         = data.aci_rest_managed.l3extFabricExtRoutingP.content.descr
     want        = "My Description"
   }
 }
 
-data "aci_rest" "l3extSubnet" {
-  dn = "${data.aci_rest.l3extFabricExtRoutingP.id}/extsubnet-[10.0.0.0/24]"
+data "aci_rest_managed" "l3extSubnet" {
+  dn = "${data.aci_rest_managed.l3extFabricExtRoutingP.id}/extsubnet-[10.0.0.0/24]"
 
   depends_on = [module.main]
 }
@@ -113,19 +113,19 @@ resource "test_assertions" "l3extSubnet" {
 
   equal "ip" {
     description = "ip"
-    got         = data.aci_rest.l3extSubnet.content.ip
+    got         = data.aci_rest_managed.l3extSubnet.content.ip
     want        = "10.0.0.0/24"
   }
 
   equal "scope" {
     description = "scope"
-    got         = data.aci_rest.l3extSubnet.content.scope
+    got         = data.aci_rest_managed.l3extSubnet.content.scope
     want        = "import-security"
   }
 }
 
-data "aci_rest" "fvPodConnP" {
-  dn = "${data.aci_rest.fvFabricExtConnP.id}/podConnP-5"
+data "aci_rest_managed" "fvPodConnP" {
+  dn = "${data.aci_rest_managed.fvFabricExtConnP.id}/podConnP-5"
 
   depends_on = [module.main]
 }
@@ -135,13 +135,13 @@ resource "test_assertions" "fvPodConnP" {
 
   equal "id" {
     description = "id"
-    got         = data.aci_rest.fvPodConnP.content.id
+    got         = data.aci_rest_managed.fvPodConnP.content.id
     want        = "5"
   }
 }
 
-data "aci_rest" "fvIp" {
-  dn = "${data.aci_rest.fvPodConnP.id}/ip-[11.1.1.11]"
+data "aci_rest_managed" "fvIp" {
+  dn = "${data.aci_rest_managed.fvPodConnP.id}/ip-[11.1.1.11]"
 
   depends_on = [module.main]
 }
@@ -151,7 +151,7 @@ resource "test_assertions" "fvIp" {
 
   equal "addr" {
     description = "addr"
-    got         = data.aci_rest.fvIp.content.addr
+    got         = data.aci_rest_managed.fvIp.content.addr
     want        = "11.1.1.11"
   }
 }

@@ -1,6 +1,6 @@
 module "aci_external_connectivity_policy" {
   source  = "netascode/external-connectivity-policy/aci"
-  version = ">= 0.0.1"
+  version = ">= 0.1.0"
 
   name         = "EXT-POL1"
   route_target = "extended:as2-nn4:5:17"

@@ -5,8 +5,8 @@ terraform {
     }
 
     aci = {
-      source  = "netascode/aci"
-      version = ">=0.2.0"
+      source  = "CiscoDevNet/aci"
+      version = ">=2.0.0"
     }
   }
 }
@@ -17,7 +17,7 @@ module "main" {
   name = "EXT-POL1"
 }
 
-data "aci_rest" "fvFabricExtConnP" {
+data "aci_rest_managed" "fvFabricExtConnP" {
   dn = "uni/tn-infra/fabricExtConnP-1"
 
   depends_on = [module.main]
@@ -28,7 +28,7 @@ resource "test_assertions" "fvFabricExtConnP" {
 
   equal "name" {
     description = "name"
-    got         = data.aci_rest.fvFabricExtConnP.content.name
+    got         = data.aci_rest_managed.fvFabricExtConnP.content.name
     want        = module.main.name
   }
 }

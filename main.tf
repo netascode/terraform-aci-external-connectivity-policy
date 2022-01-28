@@ -10,7 +10,7 @@ locals {
   ])
 }
 
-resource "aci_rest" "fvFabricExtConnP" {
+resource "aci_rest_managed" "fvFabricExtConnP" {
   dn         = "uni/tn-infra/fabricExtConnP-${var.fabric_id}"
   class_name = "fvFabricExtConnP"
   content = {
@@ -21,8 +21,8 @@ resource "aci_rest" "fvFabricExtConnP" {
   }
 }
 
-resource "aci_rest" "fvPeeringP" {
-  dn         = "${aci_rest.fvFabricExtConnP.dn}/peeringP"
+resource "aci_rest_managed" "fvPeeringP" {
+  dn         = "${aci_rest_managed.fvFabricExtConnP.dn}/peeringP"
   class_name = "fvPeeringP"
   content = {
     type     = "automatic_with_full_mesh"
@@ -34,9 +34,9 @@ resource "aci_rest" "fvPeeringP" {
   }
 }
 
-resource "aci_rest" "l3extFabricExtRoutingP" {
+resource "aci_rest_managed" "l3extFabricExtRoutingP" {
   for_each   = { for profile in var.routing_profiles : profile.name => profile }
-  dn         = "${aci_rest.fvFabricExtConnP.dn}/fabricExtRoutingP-${each.value.name}"
+  dn         = "${aci_rest_managed.fvFabricExtConnP.dn}/fabricExtRoutingP-${each.value.name}"
   class_name = "l3extFabricExtRoutingP"
   content = {
     name  = each.value.name
@@ -44,9 +44,9 @@ resource "aci_rest" "l3extFabricExtRoutingP" {
   }
 }
 
-resource "aci_rest" "l3extSubnet" {
+resource "aci_rest_managed" "l3extSubnet" {
   for_each   = { for subnet in local.subnet_list : subnet.id => subnet }
-  dn         = "${aci_rest.l3extFabricExtRoutingP[each.value.profile].dn}/extsubnet-[${each.value.subnet}]"
+  dn         = "${aci_rest_managed.l3extFabricExtRoutingP[each.value.profile].dn}/extsubnet-[${each.value.subnet}]"
   class_name = "l3extSubnet"
   content = {
     ip    = each.value.subnet
@@ -54,18 +54,18 @@ resource "aci_rest" "l3extSubnet" {
   }
 }
 
-resource "aci_rest" "fvPodConnP" {
+resource "aci_rest_managed" "fvPodConnP" {
   for_each   = { for tep in var.data_plane_teps : tep.pod_id => tep }
-  dn         = "${aci_rest.fvFabricExtConnP.dn}/podConnP-${each.value.pod_id}"
+  dn         = "${aci_rest_managed.fvFabricExtConnP.dn}/podConnP-${each.value.pod_id}"
   class_name = "fvPodConnP"
   content = {
     id = each.value.pod_id
   }
 }
 
-resource "aci_rest" "fvIp" {
+resource "aci_rest_managed" "fvIp" {
   for_each   = { for tep in var.data_plane_teps : tep.pod_id => tep }
-  dn         = "${aci_rest.fvPodConnP[each.value.pod_id].dn}/ip-[${each.value.ip}]"
+  dn         = "${aci_rest_managed.fvPodConnP[each.value.pod_id].dn}/ip-[${each.value.ip}]"
   class_name = "fvIp"
   content = {
     addr = each.value.ip
