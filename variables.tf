@@ -46,8 +46,8 @@ variable "routing_profiles" {
   description = "External routing profiles."
   type = list(object({
     name        = string
-    description = optional(string)
-    subnets     = optional(list(string))
+    description = optional(string, "")
+    subnets     = optional(list(string), [])
   }))
   default = []
 

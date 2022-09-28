@@ -13,7 +13,7 @@ Location in GUI:
 ```hcl
 module "aci_external_connectivity_policy" {
   source  = "netascode/external-connectivity-policy/aci"
-  version = ">= 0.1.0"
+  version = ">= 0.2.0"
 
   name         = "EXT-POL1"
   route_target = "extended:as2-nn4:5:17"
@@ -36,7 +36,7 @@ module "aci_external_connectivity_policy" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_aci"></a> [aci](#requirement\_aci) | >= 2.0.0 |
 
 ## Providers
@@ -54,7 +54,7 @@ module "aci_external_connectivity_policy" {
 | <a name="input_fabric_id"></a> [fabric\_id](#input\_fabric\_id) | Fabric ID. Minimum value: 1. Maximum value: 65535. | `number` | `1` | no |
 | <a name="input_site_id"></a> [site\_id](#input\_site\_id) | Site ID. Minimum value: 0. Maximum value: 1000. | `number` | `0` | no |
 | <a name="input_bgp_password"></a> [bgp\_password](#input\_bgp\_password) | BGP password. | `string` | `""` | no |
-| <a name="input_routing_profiles"></a> [routing\_profiles](#input\_routing\_profiles) | External routing profiles. | <pre>list(object({<br>    name        = string<br>    description = optional(string)<br>    subnets     = optional(list(string))<br>  }))</pre> | `[]` | no |
+| <a name="input_routing_profiles"></a> [routing\_profiles](#input\_routing\_profiles) | External routing profiles. | <pre>list(object({<br>    name        = string<br>    description = optional(string, "")<br>    subnets     = optional(list(string), [])<br>  }))</pre> | `[]` | no |
 | <a name="input_data_plane_teps"></a> [data\_plane\_teps](#input\_data\_plane\_teps) | Data plane TEPs. Allowed values `pod_id`: 1-255. | <pre>list(object({<br>    pod_id = number<br>    ip     = string<br>  }))</pre> | `[]` | no |
 
 ## Outputs

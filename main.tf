@@ -1,7 +1,7 @@
 locals {
   subnet_list = flatten([
     for prof in var.routing_profiles : [
-      for subnet in lookup(prof, "subnets", []) : {
+      for subnet in prof.subnets : {
         id      = "${prof.name}-${subnet}"
         profile = prof.name
         subnet  = subnet
