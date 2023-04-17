@@ -16,4 +16,8 @@ module "aci_external_connectivity_policy" {
     pod_id = 2
     ip     = "11.1.1.11"
   }]
+  unicast_teps = [{
+    pod_id = 2
+    ip     = "1.2.3.4"
+  }]
 }

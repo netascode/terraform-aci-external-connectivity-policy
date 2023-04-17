@@ -71,3 +71,12 @@ resource "aci_rest_managed" "fvIp" {
     addr = each.value.ip
   }
 }
+
+resource "aci_rest_managed" "fvExtRoutableUcastConnP" {
+  for_each   = { for tep in var.unicast_teps : tep.pod_id => tep }
+  dn         = "${aci_rest_managed.fvPodConnP[each.value.pod_id].dn}/extRtUcastConnP-[${each.value.ip}]"
+  class_name = "fvExtRoutableUcastConnP"
+  content = {
+    addr = each.value.ip
+  }
+}
