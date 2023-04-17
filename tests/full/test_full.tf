@@ -31,7 +31,7 @@ module "main" {
     ip     = "11.1.1.11"
   }]
   unicast_teps = [{
-    pod_id = 3
+    pod_id = 5
     ip     = "1.2.3.4"
   }]
 }
