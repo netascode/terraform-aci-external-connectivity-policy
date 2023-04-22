@@ -81,3 +81,19 @@ variable "data_plane_teps" {
     error_message = "`pod_id`: Minimum value: 1. Maximum value: 255."
   }
 }
+
+variable "unicast_teps" {
+  description = "Unicast TEPs. Allowed values `pod_id`: 1-255."
+  type = list(object({
+    pod_id = number
+    ip     = string
+  }))
+  default = []
+
+  validation {
+    condition = alltrue([
+      for tep in var.unicast_teps : tep.pod_id >= 1 && tep.pod_id <= 255
+    ])
+    error_message = "`pod_id`: Minimum value: 1. Maximum value: 255."
+  }
+}

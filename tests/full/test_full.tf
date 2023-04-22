@@ -30,6 +30,10 @@ module "main" {
     pod_id = 5
     ip     = "11.1.1.11"
   }]
+  unicast_teps = [{
+    pod_id = 5
+    ip     = "1.2.3.4"
+  }]
 }
 
 data "aci_rest_managed" "fvFabricExtConnP" {
@@ -155,5 +159,21 @@ resource "test_assertions" "fvIp" {
     description = "addr"
     got         = data.aci_rest_managed.fvIp.content.addr
     want        = "11.1.1.11"
+  }
+}
+
+data "aci_rest_managed" "fvExtRoutableUcastConnP" {
+  dn = "${data.aci_rest_managed.fvPodConnP.id}/extRtUcastConnP-[1.2.3.4]"
+
+  depends_on = [module.main]
+}
+
+resource "test_assertions" "fvExtRoutableUcastConnP" {
+  component = "fvExtRoutableUcastConnP"
+
+  equal "addr" {
+    description = "addr"
+    got         = data.aci_rest_managed.fvExtRoutableUcastConnP.content.addr
+    want        = "1.2.3.4"
   }
 }
